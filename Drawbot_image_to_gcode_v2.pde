@@ -20,12 +20,12 @@ Pfm_original  pfm;
 //Pfm_your_version  pfm;
 
 // Constants 
-final float   paper_size_x = 32 * 25.4;
-final float   paper_size_y = 40 * 25.4;
-final float   image_size_x = 28 * 25.4;
-final float   image_size_y = 36 * 25.4;
-final float   paper_top_to_origin = 285;  //mm, make smaller to move drawing down on paper
-final int     pen_count = 6;
+final float   paper_size_x = 297; //32 * 25.4;
+final float   paper_size_y = 210;// 40 * 25.4;
+final float   image_size_x = 277; //28 * 25.4;
+final float   image_size_y = 190; //36 * 25.4;
+final float   paper_top_to_origin = 0; //285;  //mm, make smaller to move drawing down on paper
+final int     pen_count = 4;
 
 
 // Every good program should have a shit pile of badly named globals.
@@ -90,7 +90,7 @@ String[][] copic_sets = {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 void setup() {
-  size(1415, 1100, P3D);
+  size(1466, 1100, P3D);
   surface.setResizable(true);
   colorMode(RGB);
   frameRate(999);
@@ -147,7 +147,7 @@ void draw() {
     close_files_and_make_images();
     break;
   case 5: 
-    render_all();
+    render_all();  
     noLoop();
     break;
   default:
@@ -197,8 +197,8 @@ void setup_squiggles() {
   gcode_scale_x = image_size_x / img.width;
   gcode_scale_y = image_size_y / img.height;
   gcode_scale = min(gcode_scale_x, gcode_scale_y);
-  gcode_offset_x = - (img.width * gcode_scale / 2.0);  
-  gcode_offset_y = - (paper_top_to_origin - (paper_size_y - (img.height * gcode_scale)) / 2.0);
+  gcode_offset_x = 0; //- (img.width * gcode_scale / 2.0);  
+  gcode_offset_y = 0; //- (paper_top_to_origin - (paper_size_y - (img.height * gcode_scale)) / 2.0);
 
   screen_scale_x = width / (float)img.width;
   screen_scale_y = height / (float)img.height;
@@ -220,6 +220,7 @@ void setup_squiggles() {
   pfm.output_parameters();
 
   state++;
+ 
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -335,7 +336,7 @@ void render_all() {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 void keyPressed() {
-
+    
   if (key == 'd') { display_mode = "drawing";   }
   if (key == 'O') { display_mode = "original";  }
   if (key == 'o') { display_mode = "reference";  }
@@ -348,6 +349,21 @@ void keyPressed() {
   if (key == 'Y') { display_mode = "pen";  pen_selected = 5; }
   if (key == 'G') { is_grid_on = ! is_grid_on; }
   if (key == ']') { screen_scale *= 1.05; }
+  if (key == 'K') { 
+    println("jkw adjust...");
+    pen_selected = 0;
+    display_mode = "pen"; 
+    pen_distribution[0] *= 0.90;
+    pen_distribution[1] *= 0.001;
+    pen_distribution[2] *= 0.001;
+    pen_distribution[3] *= 0.001;
+    
+    //for(int i=1;i<pen_count;i++){
+    //  pen_distribution[i] = 0;
+    //}
+    display_line_count = constrain(100000, 0, d1.line_count);
+    println("done");
+  }
   if (key == '[') { screen_scale *= 1 / 1.05; }
   if (key == '1') { pen_distribution[0] *= 1.1; }
   if (key == '2') { pen_distribution[1] *= 1.1; }

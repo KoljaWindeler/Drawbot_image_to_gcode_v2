@@ -6,12 +6,15 @@
 void gcode_header() {
   OUTPUT.println("G21");
   OUTPUT.println("G90");
-  OUTPUT.println("G1 Z0");
+  OUTPUT.println("M3S100");
+  OUTPUT.println("G4P0.200");
+  OUTPUT.println("F25000");
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 void gcode_trailer() {
-  OUTPUT.println("G1 Z0");
+  OUTPUT.println("M3S100");
+  OUTPUT.println("G4P0.200");
   OUTPUT.println("G1 X0.10 y0.10");
   OUTPUT.println("G1 X0 y0");
 }
@@ -80,7 +83,8 @@ void create_gcode_files (int line_count) {
  
         if (x != gcode_scaled_x1 || y != gcode_scaled_y1) {
           // Oh crap, where the line starts is not where I am, pick up the pen and move there.
-          OUTPUT.println("G1 Z0");
+          OUTPUT.println("M3S100");
+          OUTPUT.println("G4P0.200");
           is_pen_down = false;
           distance = sqrt( sq(abs(x - gcode_scaled_x1)) + sq(abs(y - gcode_scaled_y1)) );
           String buf = "G1 X" + nf(gcode_scaled_x1,0,2) + " Y" + nf(gcode_scaled_y1,0,2);
@@ -93,14 +97,16 @@ void create_gcode_files (int line_count) {
         
         if (d1.lines[i].pen_down) {
           if (is_pen_down == false) {
-            OUTPUT.println("G1 Z1");
+            OUTPUT.println("M3S300");
+            OUTPUT.println("G4P0.200");
             is_pen_down = true;
           }
           pen_drawing = pen_drawing + distance;
           lines_drawn++;
         } else {
           if (is_pen_down == true) {
-            OUTPUT.println("G1 Z0");
+            OUTPUT.println("M3S100");
+            OUTPUT.println("G4P0.200");
             is_pen_down = false;
             pen_movement = pen_movement + distance;
             pen_lifts++;
@@ -143,31 +149,39 @@ void create_gcode_test_file () {
   
   OUTPUT.println("(Upper left)");
   OUTPUT.println("G1 X" + nf(dx.min,0,2) + " Y" + nf(dy.min + test_length,0,2));
-  OUTPUT.println("G1 Z1");
+  OUTPUT.println("M3S300");
+  OUTPUT.println("G4P0.200");
   OUTPUT.println("G1 X" + nf(dx.min,0,2) + " Y" + nf(dy.min,0,2));
   OUTPUT.println("G1 X" + nf(dx.min + test_length,0,2) + " Y" + nf(dy.min,0,2));
-  OUTPUT.println("G1 Z0");
+  OUTPUT.println("M3S100");
+  OUTPUT.println("G4P0.200");
 
   OUTPUT.println("(Upper right)");
   OUTPUT.println("G1 X" + nf(dx.max - test_length,0,2) + " Y" + nf(dy.min,0,2));
-  OUTPUT.println("G1 Z1");
+  OUTPUT.println("M3S300");
+  OUTPUT.println("G4P0.200");
   OUTPUT.println("G1 X" + nf(dx.max,0,2) + " Y" + nf(dy.min,0,2));
   OUTPUT.println("G1 X" + nf(dx.max,0,2) + " Y" + nf(dy.min + test_length,0,2));
-  OUTPUT.println("G1 Z0");
+  OUTPUT.println("M3S100");
+  OUTPUT.println("G4P0.200");
 
   OUTPUT.println("(Lower right)");
   OUTPUT.println("G1 X" + nf(dx.max,0,2) + " Y" + nf(dy.max - test_length,0,2));
-  OUTPUT.println("G1 Z1");
+  OUTPUT.println("M3S300");
+  OUTPUT.println("G4P0.200");
   OUTPUT.println("G1 X" + nf(dx.max,0,2) + " Y" + nf(dy.max,0,2));
   OUTPUT.println("G1 X" + nf(dx.max - test_length,0,2) + " Y" + nf(dy.max,0,2));
-  OUTPUT.println("G1 Z0");
+  OUTPUT.println("M3S100");
+  OUTPUT.println("G4P0.200");
 
   OUTPUT.println("(Lower left)");
   OUTPUT.println("G1 X" + nf(dx.min + test_length,0,2) + " Y" + nf(dy.max,0,2));
-  OUTPUT.println("G1 Z1");
+  OUTPUT.println("M3S300");
+  OUTPUT.println("G4P0.200");
   OUTPUT.println("G1 X" + nf(dx.min,0,2) + " Y" + nf(dy.max,0,2));
   OUTPUT.println("G1 X" + nf(dx.min,0,2) + " Y" + nf(dy.max - test_length,0,2));
-  OUTPUT.println("G1 Z0");
+  OUTPUT.println("M3S100");
+  OUTPUT.println("G4P0.200");
 
   gcode_trailer();
   OUTPUT.flush();

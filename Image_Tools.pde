@@ -47,7 +47,7 @@ void image_rotate() {
   //image[original_height - x][y]                   // 90 degrees cw
   //image[original_height - y][original_width - x]  // 180 degrees
 
-  if (img.width > img.height) {
+  if (img.height > img.width) {
     gcode_comment("Rotated");
     PImage img2 = createImage(img.height, img.width, RGB);
     img.loadPixels();
@@ -98,7 +98,7 @@ void image_crop() {
   // This will center crop to the desired image size image_size_x and image_size_y
   
   PImage img2;
-  float desired_ratio = image_size_x / image_size_y;
+  float desired_ratio = image_size_x / image_size_y;          // if portrai: <1
   float current_ratio = (float)img.width / (float)img.height;
   
   gcode_comment("Cropping image to desired ratio of " + desired_ratio);
