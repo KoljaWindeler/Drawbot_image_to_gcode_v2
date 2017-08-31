@@ -79,6 +79,13 @@ void create_gcode_files (int line_count) {
         float gcode_scaled_y1 = d1.lines[i].y1 * gcode_scale + gcode_offset_y;
         float gcode_scaled_x2 = d1.lines[i].x2 * gcode_scale + gcode_offset_x;
         float gcode_scaled_y2 = d1.lines[i].y2 * gcode_scale + gcode_offset_y;
+        
+        gcode_scaled_x1+=(paper_size_x-image_size_x)/2;
+        gcode_scaled_x2+=(paper_size_x-image_size_x)/2;
+        gcode_scaled_y1=-gcode_scaled_y1+image_size_y+(paper_size_y-image_size_y)/2;
+        gcode_scaled_y2=-gcode_scaled_y2+image_size_y+(paper_size_y-image_size_y)/2;
+        
+        
         distance = sqrt( sq(abs(gcode_scaled_x1 - gcode_scaled_x2)) + sq(abs(gcode_scaled_y1 - gcode_scaled_y2)) );
  
         if (x != gcode_scaled_x1 || y != gcode_scaled_y1) {
